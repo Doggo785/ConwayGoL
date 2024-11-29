@@ -9,10 +9,10 @@ public:
     virtual ~Entite() {}
 
 
-    bool estVivante();
-    void changerEtat(bool etat);
+    bool estVivante() const { return etat; }
+    void changerEtat(bool nouvelEtat) { etat = nouvelEtat; }
 
-    virtual void DeterminerEtatSuivant(int voisinsVivants);
+    virtual void DeterminerEtatSuivant(int voisinsVivants) = 0;
 
 };
 
