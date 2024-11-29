@@ -12,7 +12,7 @@ public:
     bool estVivante();
     void changerEtat(bool etat);
 
-    virtual void DeterminerEtatSuivant(int voisinsVivants) = 0;
+    virtual void DeterminerEtatSuivant(int voisinsVivants);
 
 };
 
