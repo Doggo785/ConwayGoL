@@ -6,7 +6,7 @@
 class AfficheurConsole : public Afficheur {
 public:
     AfficheurConsole() {}
-    virtual void Afficher(const Grille& grille) const override;
+    virtual void Afficher(const Grille& grille) override;
 
 };
 

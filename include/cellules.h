@@ -7,7 +7,7 @@ class Cellules : public Entite {
 public:
     Cellules(bool etatInitial);
 
-    void DeterminerEtatSuivant(int voisinsVivants) override;
+    bool DeterminerEtatSuivant(int voisinsVivants) override;
 };
 
 

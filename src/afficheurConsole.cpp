@@ -5,7 +5,7 @@
 
 // AfficheurConsole::AfficheurConsole() {}
 
-void AfficheurConsole::Afficher(const Grille& grille) const {
+void AfficheurConsole::Afficher(const Grille& grille) {
    for (int x = 0; x < grille.getHauteur(); ++x) {
        for (int y = 0; y < grille.getLargeur(); ++y) {
            Entite* entite = grille.getEntite(x, y);

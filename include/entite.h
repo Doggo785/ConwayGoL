@@ -12,7 +12,7 @@ public:
     bool estVivante() const { return etat; }
     void changerEtat(bool nouvelEtat) { etat = nouvelEtat; }
 
-    virtual void DeterminerEtatSuivant(int voisinsVivants) = 0;
+    virtual bool DeterminerEtatSuivant(int voisinsVivants) = 0;
 
 };
 
