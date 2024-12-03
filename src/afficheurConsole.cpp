@@ -13,8 +13,10 @@ void AfficheurConsole::Afficher(const Grille& grille) {
                std::cout << " . "; // Case vide
            } else if (dynamic_cast<Cellules*>(entite)) {
                std::cout << (entite->estVivante() ? " O " : " X "); // Cellule vivante ou morte
-           } else if (dynamic_cast<Obstacle*>(entite)) {
+           } else if (dynamic_cast<Obstacle*>(entite) && entite->estVivante()) {
                std::cout << " # "; // Obstacle
+           } else if (dynamic_cast<Obstacle*>(entite) && !entite->estVivante()) {
+               std::cout << " ☐ "; // Case vide
            }
        }
        std::cout << std::endl;

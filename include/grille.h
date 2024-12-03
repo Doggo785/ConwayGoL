@@ -3,6 +3,7 @@
 
 #include "entite.h"
 #include <vector>
+#include <string>
 
 
 class Grille {
@@ -22,6 +23,7 @@ public:
     Entite* getEntite(int x, int y) const;
 
     // Méthodes
+    bool chargerFichier(const std::string& nomFichier);
     int calculerVoisins(int x, int y) const;
     void MettreAJour();
 };

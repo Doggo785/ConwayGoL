@@ -1,6 +1,10 @@
 #include "../include/grille.h"
 #include "../include/cellules.h"
+#include "../include/obstacle.h"
+#include <fstream>
 #include <iostream>
+#include <sstream>
+
 
 
 
@@ -44,21 +48,30 @@ Entite* Grille::getEntite(int x, int y) const {
 
 // Calcul le nombre de voisins de l'entité à la position (x, y)
 int Grille::calculerVoisins(int x, int y) const {
-    int nbVoisins = 0;
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            if (i == 0 && j == 0) {
-                continue;
-            }
-            if (x + i >= 0 && x + i < hauteur && y + j >= 0 && y + j < largeur) {
-                if (grille[x + i][y + j] != nullptr) {
-                    nbVoisins++;
+    int voisinsVivants = 0;
+
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            if (dx == 0 && dy == 0) continue; // Ignorer la cellule elle-même
+
+            int nx = x + dx;
+            int ny = y + dy;
+
+            // Vérifier que les coordonnées sont valides
+            if (nx >= 0 && nx < hauteur && ny >= 0 && ny < largeur) {
+                Entite* voisin = grille[nx][ny];
+
+                // Compter les voisins vivants, y compris les obstacles vivants
+                if (voisin && voisin->estVivante()) {
+                    ++voisinsVivants;
                 }
             }
         }
     }
-    return nbVoisins;
+
+    return voisinsVivants;
 }
+
 
 
 
@@ -83,6 +96,11 @@ void Grille::MettreAJour() {
     // Appliquer les changements d'état et ajouter/supprimer des entités
     for (int x = 0; x < hauteur; ++x) {
         for (int y = 0; y < largeur; ++y) {
+            // Verifications obstacles
+            if (dynamic_cast<Obstacle*>(grille[x][y])) {
+                // Si la cellule est un obstacle vivant, elle ne peut pas changer d'état
+                continue;
+            }
             if (prochainsEtats[x][y]) {
                 // Si une cellule doit apparaître ou rester vivante
                 if (!grille[x][y]) {  // Si aucune entité n'existe à cette position, on en crée une
@@ -99,4 +117,43 @@ void Grille::MettreAJour() {
             }
         }
     }
+}
+
+bool Grille::chargerFichier(const std::string& nomFichier) {
+    std::ifstream fichier(nomFichier);
+    if (!fichier) {
+        std::cerr << "Erreur lors de l'ouverture du fichier : " << nomFichier << std::endl;
+        return false;  // Le fichier n'a pas pu être ouvert
+    }
+
+    // Lire la première ligne pour obtenir la hauteur et la largeur
+    fichier >> hauteur >> largeur;
+
+    // Redimensionner la grille en fonction de la taille du fichier
+    grille.resize(hauteur, std::vector<Entite*>(largeur, nullptr));
+
+    // Lire chaque ligne et initialiser la grille
+    for (int x = 0; x < hauteur; ++x) {
+        for (int y = 0; y < largeur; ++y) {
+            int valeur;
+            fichier >> valeur;
+
+            // Créer des entités en fonction de la valeur
+            if (valeur == 1) {
+                // Cellule vivante
+                ajoutEntite(x, y, new Cellules(true));
+            } else if (valeur == 2) {
+                // Obsacle mort
+                ajoutEntite(x, y, new Obstacle(false)); // Cellule vide
+            } else if (valeur == 3) {
+                // Obstacle vivant
+                ajoutEntite(x, y, new Obstacle(true));
+            } else {
+                // Cellule morte ou vide
+                ajoutEntite(x, y, nullptr);
+            }
+        }
+    }
+
+    return true;
 }

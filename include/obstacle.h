@@ -7,7 +7,9 @@ class Obstacle : public Entite {
 public:
     Obstacle(bool etatInitial) : Entite(etatInitial) {}
 
-    bool DeterminerEtatSuivant(int voisinsVivants) override {}
+    bool DeterminerEtatSuivant(int voisinsVivants) override {
+        return etat;
+    }
 };
 
 #endif // OBSTACLE_H
