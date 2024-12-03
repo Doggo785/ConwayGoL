@@ -1,4 +1,5 @@
 #include "../include/grille.h"
+#include "../include/cellules.h"
 #include <iostream>
 
 
@@ -59,16 +60,42 @@ int Grille::calculerVoisins(int x, int y) const {
     return nbVoisins;
 }
 
-// Met à jour la grille [A TESTER]
+
+
 void Grille::MettreAJour() {
-    std::vector<std::vector<int>> prochainsEtats(hauteur, std::vector<int>(largeur, 0));
+    // Matrice temporaire pour stocker les prochains états
+    std::vector<std::vector<bool>> prochainsEtats(hauteur, std::vector<bool>(largeur, false));
 
     // Calculer les prochains états
     for (int x = 0; x < hauteur; ++x) {
         for (int y = 0; y < largeur; ++y) {
-            if (grille[x][y]) {
-                int voisins = calculerVoisins(x, y);
-                grille[x][y]->DeterminerEtatSuivant(voisins);
+            int voisins = calculerVoisins(x, y);
+            if (grille[x][y] && grille[x][y]->estVivante()) {
+                // Une cellule vivante possédant deux ou trois voisines vivantes reste vivante, sinon elle meurt
+                prochainsEtats[x][y] = (voisins == 2 || voisins == 3);
+            } else {
+                // Une cellule morte possédant exactement trois voisines vivantes devient vivante
+                prochainsEtats[x][y] = (voisins == 3);
+            }
+        }
+    }
+
+    // Appliquer les changements d'état et ajouter/supprimer des entités
+    for (int x = 0; x < hauteur; ++x) {
+        for (int y = 0; y < largeur; ++y) {
+            if (prochainsEtats[x][y]) {
+                // Si une cellule doit apparaître ou rester vivante
+                if (!grille[x][y]) {  // Si aucune entité n'existe à cette position, on en crée une
+                    grille[x][y] = new Cellules(true);  // Créer une nouvelle cellule vivante
+                } else {
+                    grille[x][y]->changerEtat(true); // Mettre à jour l'état de la cellule existante
+                }
+            } else {
+                // Si la cellule doit mourir ou rester morte
+                if (grille[x][y] && grille[x][y]->estVivante()) {  // Si une cellule vivante existe
+                    grille[x][y]->changerEtat(false);
+                    supprimerEntite(x, y);  // La cellule devient morte
+                }
             }
         }
     }
