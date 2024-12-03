@@ -1,7 +1,7 @@
 #ifndef GRILLE_H
 #define GRILLE_H
 
-#include <entite.h>
+#include "entite.h"
 #include <vector>
 
 
@@ -15,6 +15,8 @@ public:
     ~Grille();	
 
     // Getters et Setters
+    int getHauteur() const { return hauteur; }
+    int getLargeur() const { return largeur; }
     void ajoutEntite(int x, int y, Entite* entite);
     void supprimerEntite(int x, int y);
     Entite* getEntite(int x, int y) const;
