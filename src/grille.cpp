@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <thread>
 
 
 
@@ -76,24 +77,43 @@ void Grille::MettreAJour() {
     // Matrice temporaire pour stocker les prochains états
     std::vector<std::vector<bool>> prochainsEtats(hauteur, std::vector<bool>(largeur, false));
 
-    // Calculer les prochains états
-    for (int x = 0; x < hauteur; ++x) {
-        for (int y = 0; y < largeur; ++y) {
-            int voisins = calculerVoisins(x, y);
-            if (grille[x][y] && grille[x][y]->estVivante()) {
-                // Une cellule vivante possédant deux ou trois voisines vivantes reste vivante, sinon elle meurt
-                prochainsEtats[x][y] = (voisins == 2 || voisins == 3);
-            } else {
-                // Une cellule morte possédant exactement trois voisines vivantes devient vivante
-                prochainsEtats[x][y] = (voisins == 3);
+    // Nombre de threads à utiliser
+    const int numThreads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+
+    // Fonction lambda pour calculer les prochains états sur une section de la grille
+    auto calculerSection = [&](int debut, int fin) {
+        for (int x = debut; x < fin; ++x) {
+            for (int y = 0; y < largeur; ++y) {
+                int voisins = calculerVoisins(x, y);
+                if (grille[x][y] && grille[x][y]->estVivante()) {
+                    // Une cellule vivante possédant deux ou trois voisines vivantes reste vivante
+                    prochainsEtats[x][y] = (voisins == 2 || voisins == 3);
+                } else {
+                    // Une cellule morte possédant exactement trois voisines vivantes devient vivante
+                    prochainsEtats[x][y] = (voisins == 3);
+                }
             }
         }
+    };
+
+    // Diviser la grille en sections et assigner une section à chaque thread
+    int sectionTaille = hauteur / numThreads;
+    for (int i = 0; i < numThreads; ++i) {
+        int debut = i * sectionTaille;
+        int fin = (i == numThreads - 1) ? hauteur : debut + sectionTaille;
+        threads.emplace_back(calculerSection, debut, fin);
+    }
+
+    // Attendre la fin de tous les threads
+    for (auto& t : threads) {
+        t.join();
     }
 
     // Appliquer les changements d'état et ajouter/supprimer des entités
     for (int x = 0; x < hauteur; ++x) {
         for (int y = 0; y < largeur; ++y) {
-            // Verifications obstacles
+            // Vérifications pour les obstacles
             if (dynamic_cast<Obstacle*>(grille[x][y])) {
                 // Si la cellule est un obstacle vivant, elle ne peut pas changer d'état
                 continue;
