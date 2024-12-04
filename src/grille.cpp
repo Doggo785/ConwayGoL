@@ -46,7 +46,7 @@ Entite* Grille::getEntite(int x, int y) const {
     return nullptr;
 }
 
-// Calcul le nombre de voisins de l'entité à la position (x, y)
+// Calculer le nombre de voisins vivants d'une cellule à la position (x, y) grille torique
 int Grille::calculerVoisins(int x, int y) const {
     int voisinsVivants = 0;
 
@@ -54,23 +54,20 @@ int Grille::calculerVoisins(int x, int y) const {
         for (int dy = -1; dy <= 1; ++dy) {
             if (dx == 0 && dy == 0) continue; // Ignorer la cellule elle-même
 
-            int nx = x + dx;
-            int ny = y + dy;
+            // Calculer les coordonnées des voisins dans une grille torique
+            int nx = (x + dx + hauteur) % hauteur; // Wrap-around en hauteur
+            int ny = (y + dy + largeur) % largeur; // Wrap-around en largeur
 
-            // Vérifier que les coordonnées sont valides
-            if (nx >= 0 && nx < hauteur && ny >= 0 && ny < largeur) {
-                Entite* voisin = grille[nx][ny];
-
-                // Compter les voisins vivants, y compris les obstacles vivants
-                if (voisin && voisin->estVivante()) {
-                    ++voisinsVivants;
-                }
+            Entite* voisin = grille[nx][ny];
+            if (voisin && voisin->estVivante()) {
+                ++voisinsVivants;
             }
         }
     }
 
     return voisinsVivants;
 }
+
 
 
 
@@ -156,4 +153,23 @@ bool Grille::chargerFichier(const std::string& nomFichier) {
     }
 
     return true;
+}
+
+std::vector<std::vector<bool>> Grille::capturerEtat() const {
+    std::vector<std::vector<bool>> etat(hauteur, std::vector<bool>(largeur, false));
+
+    for (int x = 0; x < hauteur; ++x) {
+        for (int y = 0; y < largeur; ++y) {
+            Entite* entite = grille[x][y];
+            if (entite && entite->estVivante()) {
+                etat[x][y] = true;
+            }
+        }
+    }
+
+    return etat;
+}
+
+bool Grille::etatIdentique(const std::vector<std::vector<bool>>& etat1, const std::vector<std::vector<bool>>& etat2) const {
+    return etat1 == etat2;
 }

@@ -27,6 +27,7 @@ void ModeGraphique::afficher() {
 }
 
 void ModeGraphique::simuler() {
+    std::vector<std::vector<bool>> etatPrecedent = grille->capturerEtat();
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -37,6 +38,19 @@ void ModeGraphique::simuler() {
 
         // Mettre à jour la grille à chaque itération
         grille->MettreAJour();
+
+        // Capturer l'état après la mise à jour
+        std::vector<std::vector<bool>> etatActuel = grille->capturerEtat();
+
+        // Vérifier la stabilité
+        if (grille->etatIdentique(etatPrecedent, etatActuel)) {
+            std::cout << "Le jeu est stable. Fin de la simulation." << std::endl;
+            break;
+        }
+
+        // Mettre à jour l'état précédent
+        etatPrecedent = etatActuel;
+
         afficher(); // Afficher la grille mise à jour
 
         // Limiter la vitesse de simulation

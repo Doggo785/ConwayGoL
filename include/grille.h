@@ -15,6 +15,12 @@ public:
     Grille(int hauteur, int largeur);
     ~Grille();	
 
+
+   // Capture l'état actuel de la grille pour verification stable
+    std::vector<std::vector<bool>> capturerEtat() const;
+    bool etatIdentique(const std::vector<std::vector<bool>>& etat1, const std::vector<std::vector<bool>>& etat2) const;
+
+
     // Getters et Setters
     int getHauteur() const { return hauteur; }
     int getLargeur() const { return largeur; }

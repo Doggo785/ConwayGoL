@@ -34,6 +34,7 @@ void ModeConsole::saveFichier(int iteration) const {
 }
 
 void ModeConsole::simuler() {
+    std::vector<std::vector<bool>> etatPrecedent = grille->capturerEtat();
     for (int i = 0; i < iterationMax; ++i) {
         std::cout << "=== Iteration " << i + 1 << " / " << iterationMax << " ===" << std::endl;
 
@@ -46,6 +47,18 @@ void ModeConsole::simuler() {
         // Mettre à jour la grille
         grille->MettreAJour();
         
+        // Capturer l'état après la mise à jour
+        std::vector<std::vector<bool>> etatActuel = grille->capturerEtat();
+
+        // Vérifier la stabilité
+        if (grille->etatIdentique(etatPrecedent, etatActuel)) {
+            std::cout << "Le jeu est stable. Fin de la simulation." << std::endl;
+            break;
+        }
+
+        // Mettre à jour l'état précédent
+        etatPrecedent = etatActuel;
+
         // Pause ou interaction utilisateur (optionnel)
         std::cout << "Appuyez sur Entrée pour continuer..." << std::endl;
         std::cin.ignore();
