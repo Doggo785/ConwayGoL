@@ -1,7 +1,7 @@
 #ifndef AFFICHEURCONSOLE_H
 #define AFFICHEURCONSOLE_H
 
-#include "afficheur.h"
+#include "afficheur.hpp"
 
 class AfficheurConsole : public Afficheur {
 public:

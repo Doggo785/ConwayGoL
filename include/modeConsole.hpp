@@ -1,8 +1,8 @@
 #ifndef MODECONSOLE_H
 #define MODECONSOLE_H
 
-#include "modeSimulation.h"
-#include "afficheurConsole.h"
+#include "modeSimulation.hpp"
+#include "afficheurConsole.hpp"
 
 class ModeConsole : public ModeSimulation { 
 private:

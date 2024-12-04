@@ -1,4 +1,4 @@
-#include "../include/modeConsole.h"
+#include "../include/modeConsole.hpp"
 #include <iostream>
 #include <fstream>
 

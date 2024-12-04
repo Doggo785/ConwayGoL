@@ -1,7 +1,7 @@
 #ifndef GRILLE_H
 #define GRILLE_H
 
-#include "entite.h"
+#include "entite.hpp"
 #include <vector>
 #include <string>
 

@@ -1,7 +1,7 @@
 #ifndef MODESIMULATION_H
 #define MODESIMULATION_H
 
-#include "grille.h"
+#include "grille.hpp"
 
 class ModeSimulation { 
 protected:

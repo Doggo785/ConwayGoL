@@ -1,6 +1,6 @@
-#include "../include/afficheurConsole.h"
-#include "../include/cellules.h"
-#include "../include/obstacle.h"
+#include "../include/afficheurConsole.hpp"
+#include "../include/cellules.hpp"
+#include "../include/obstacle.hpp"
 #include <iostream>
 
 // AfficheurConsole::AfficheurConsole() {}

@@ -1,6 +1,6 @@
-#include "../include/grille.h"
-#include "../include/cellules.h"
-#include "../include/obstacle.h"
+#include "../include/grille.hpp"
+#include "../include/cellules.hpp"
+#include "../include/obstacle.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>

@@ -1,3 +1,3 @@
-#include "../include/modeSimulation.h"
+#include "../include/modeSimulation.hpp"
 
 ModeSimulation::~ModeSimulation() {}

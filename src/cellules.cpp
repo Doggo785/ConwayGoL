@@ -1,4 +1,4 @@
-#include "../include/cellules.h"
+#include "../include/cellules.hpp"
 
 Cellules::Cellules(bool etatInitial) : Entite(etatInitial) {}
 
