@@ -1,141 +1,128 @@
-#include "../include/modeGraphique.hpp"
-#include <SFML/Graphics.hpp>
-#include "../include/cellules.hpp"
-#include "../include/obstacle.hpp"
+#include "modeGraphique.hpp"
 #include <iostream>
+#include <SFML/Window/Event.hpp>
 
 ModeGraphique::ModeGraphique(Grille* grille)
-    : ModeSimulation(grille, iterationMax), window(sf::VideoMode(800, 600), "Jeu de la Vie") {
-    // Paramètres de base pour dessiner les cellules
-    cellShape.setSize(sf::Vector2f(10.f, 10.f));
-
-if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
-{
-    std::cerr << "Erreur lors du chargement de la police" << std::endl;
-}
-    float boutonX = window.getSize().x - 150;  // 150 est la largeur estimée du bouton
-    float boutonY = 10.f;  // En haut, à 10 pixels du bord supérieur
-    // Initialisation des textes
-    iterationText.setFont(font);
-    iterationText.setCharacterSize(20);
-    iterationText.setFillColor(sf::Color::White);
-    iterationText.setPosition(10, 10);
-
-    timerText.setFont(font);
-    timerText.setCharacterSize(20);
-    timerText.setFillColor(sf::Color::White);
-    timerText.setPosition(10, 40);
-
-    // Boutons
-    boutonPause.setFont(font);
-    boutonPause.setCharacterSize(20);
-    boutonPause.setFillColor(sf::Color::White);
-    boutonPause.setPosition(boutonX, boutonY + 40);
-    boutonPause.setString("Pause");
-
-        // Bouton "Démarrer"
-    boutonDemarrer.setFont(font);
-    boutonDemarrer.setCharacterSize(20);
-    boutonDemarrer.setFillColor(sf::Color::White);
-    boutonDemarrer.setPosition(boutonX, boutonY);
-    boutonDemarrer.setString("Start");
-
-    // Message de fin
-    messageFin.setFont(font);
-    messageFin.setCharacterSize(20);
-    messageFin.setFillColor(sf::Color::Red);
-    messageFin.setPosition(10, 160);
-    messageFin.setString("");
-
-    boutonQuitter.setFont(font);
-    boutonQuitter.setCharacterSize(20);
-    boutonQuitter.setFillColor(sf::Color::White);
-    boutonQuitter.setPosition(boutonX, boutonY + 80);
-    boutonQuitter.setString("Quitter");
+    : ModeSimulation(grille, iterationMax),
+      window(sf::VideoMode(1280, 720), "Jeu de la Vie"),
+      afficheur(&window),
+      etatCourant(Menu),
+      iterations(0),
+      vitesse(1),
+      simulationLancee(false),
+      quitterSimulation(false) {
+    afficheur.chargerRessources();
 }
 
-void ModeGraphique::afficher() {
-    window.clear();
-
-    for (int x = 0; x < grille->getHauteur(); ++x) {
-        for (int y = 0; y < grille->getLargeur(); ++y) {
-            Entite* entite = grille->getEntite(x, y);
-
-            if (entite == nullptr) {
-                cellShape.setFillColor(sf::Color::Black); // Case vide
-            } else if (dynamic_cast<Cellules*>(entite)) {
-                cellShape.setFillColor(entite->estVivante() ? sf::Color::Green : sf::Color::Red); // Vert = vivant, Rouge = mort
-            } else if (dynamic_cast<Obstacle*>(entite)) {
-                cellShape.setFillColor(entite->estVivante() ? sf::Color::Blue : sf::Color::Yellow); // Bleu = obstacle vivant, Jaune = obstacle mort
-            }
-
-            cellShape.setPosition(y * 10.f, x * 10.f);
-            window.draw(cellShape);
-        }
+ModeGraphique::~ModeGraphique() {
+    quitterSimulation = true;
+    if (simulationThread.joinable()) {
+        simulationThread.join();
     }
-
-    afficherTexte(); // Afficher les textes et boutons
-    window.display();
 }
 
 void ModeGraphique::simuler() {
-    int iteration = 0;
+    bool quitter = false;
 
-    while (window.isOpen()) {
-        gererEvenements();
-
-        if (etatSimulation == EnCours && !enPause) {
-            auto debut = std::chrono::high_resolution_clock::now();
-            grille->MettreAJour();
-            auto fin = std::chrono::high_resolution_clock::now();
-            auto duree = std::chrono::duration_cast<std::chrono::milliseconds>(fin - debut).count();
-
-            ++iteration;
-            iterationText.setString("Iteration : " + std::to_string(iteration));
-            timerText.setString("Temps : " + std::to_string(duree) + " ms");
-
-            afficher();
-        } else if (etatSimulation == Attente) {
-            afficher(); // Affiche la fenêtre avec le bouton Démarrer
-        } else if (etatSimulation == Terminee) {
-            afficher(); // Continue d'afficher la fenêtre avec le message de fin
+    while (window.isOpen() && !quitter) {
+        if (etatCourant == Menu) {
+            gererEvenementsMenu(quitter);
+            afficheur.afficherMenu();
+        } else if (etatCourant == Editeur) {
+            gererEvenementsEditeur(quitter);
+            afficheur.afficherEditeur(*grille);
+        } else if (etatCourant == Simulation) {
+            gererEvenementsSimulation(quitter);
+            afficheur.afficherSimulation(*grille, iterations, grille->compterCellulesVivantes(), vitesse);
         }
-
-        sf::sleep(sf::milliseconds(100));
     }
 }
 
-
-void ModeGraphique::gererEvenements() {
+void ModeGraphique::gererEvenementsMenu(bool& quitter) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
-            window.close();
+            quitter = true;
         } else if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2f souris(event.mouseButton.x, event.mouseButton.y);
 
-            if (boutonDemarrer.getGlobalBounds().contains(souris) && etatSimulation == Attente) {
-                etatSimulation = EnCours;
-            } else if (boutonPause.getGlobalBounds().contains(souris) && etatSimulation == EnCours) {
-                enPause = !enPause;
-                boutonPause.setString(enPause ? "Reprendre" : "Pause");
-            } else if (boutonQuitter.getGlobalBounds().contains(souris)) {
-                window.close();
+            // Vérifier les clics sur les boutons
+            if (afficheur.boutonStart.getGlobalBounds().contains(souris)) {
+                etatCourant = Simulation; // Passer au mode simulation
+                simulationLancee = true;
+                quitterSimulation = false;
+                simulationThread = std::thread(&ModeGraphique::boucleSimulation, this);
+            } else if (afficheur.boutonQuit.getGlobalBounds().contains(souris)) {
+                quitter = true;
             }
         }
     }
 }
 
+void ModeGraphique::gererEvenementsEditeur(bool& quitter) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            quitter = true;
+        } else if (event.type == sf::Event::MouseButtonPressed) {
+            sf::Vector2f souris(event.mouseButton.x, event.mouseButton.y);
 
-void ModeGraphique::afficherTexte() {
-    window.draw(iterationText);
-    window.draw(timerText);
-    window.draw(boutonPause);
-    window.draw(boutonQuitter);
-    window.draw(boutonDemarrer);
-
-    if (etatSimulation == Terminee) {
-        window.draw(messageFin);
+            // Vérifier les clics sur les boutons
+            if (afficheur.boutonStart.getGlobalBounds().contains(souris)) {
+                etatCourant = Simulation; // Lancer la simulation
+                simulationLancee = true;
+                quitterSimulation = false;
+                simulationThread = std::thread(&ModeGraphique::boucleSimulation, this);
+            } else if (afficheur.boutonQuit.getGlobalBounds().contains(souris)) {
+                quitter = true;
+            }
+        } else if (event.type == sf::Event::KeyPressed) {
+            // Gérer les entrées clavier pour placer des patterns
+            if (event.key.code == sf::Keyboard::P) {
+                grille->placerPattern("Glider", 10, 10); // Exemple : placer un "Glider" au centre
+            } else if (event.key.code == sf::Keyboard::C) {
+                grille->vider(); // Nettoyer la grille
+            }
+        }
     }
 }
 
+void ModeGraphique::gererEvenementsSimulation(bool& quitter) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            quitter = true;
+            quitterSimulation = true;
+        } else if (event.type == sf::Event::MouseButtonPressed) {
+            sf::Vector2f souris(event.mouseButton.x, event.mouseButton.y);
+
+            // Vérifier les clics sur les boutons de contrôle de vitesse
+            if (afficheur.boutonVitessePlus.getGlobalBounds().contains(souris)) {
+                vitesse = std::min(vitesse + 1, 20); // Limite supérieure de la vitesse
+            } else if (afficheur.boutonVitesseMoins.getGlobalBounds().contains(souris)) {
+                vitesse = std::max(vitesse - 1, 1); // Limite inférieure de la vitesse
+            } else if (afficheur.playPauseButton.getGlobalBounds().contains(souris)) {
+                simulationLancee = !simulationLancee; // Alterner entre pause et reprise
+                if (simulationLancee) {
+                    afficheur.playPauseButton.setTexture(afficheur.pauseTexture); // Changer l'icône en "Pause"
+                } else {
+                    afficheur.playPauseButton.setTexture(afficheur.playTexture); // Changer l'icône en "Play"
+                }
+            } else if (afficheur.boutonQuitterSimulation.getGlobalBounds().contains(souris)) {
+                quitter = true; // Quitter la simulation
+                quitterSimulation = true;
+            }
+        }
+    }
+}
+
+void ModeGraphique::boucleSimulation() {
+    while (!quitterSimulation) {
+        if (simulationLancee) {
+            // Mise à jour de la grille à chaque itération
+            sf::sleep(sf::milliseconds(1000 / vitesse)); // Contrôle de la vitesse
+            grille->MettreAJour();
+            iterations++;
+        }
+    }
+}

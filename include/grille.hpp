@@ -32,6 +32,9 @@ public:
     bool chargerFichier(const std::string& nomFichier);
     int calculerVoisins(int x, int y) const;
     void MettreAJour();
+    int compterCellulesVivantes() const;
+    void placerPattern(const std::string& nomPattern, int x, int y);
+    void vider();
 };
 
 #endif // GRILLE_H

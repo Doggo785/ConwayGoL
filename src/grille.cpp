@@ -193,3 +193,60 @@ std::vector<std::vector<bool>> Grille::capturerEtat() const {
 bool Grille::etatIdentique(const std::vector<std::vector<bool>>& etat1, const std::vector<std::vector<bool>>& etat2) const {
     return etat1 == etat2;
 }
+
+// Nouvelle fonction pour compter les cellules vivantes
+int Grille::compterCellulesVivantes() const {
+    int compteur = 0;
+    for (int x = 0; x < hauteur; ++x) {
+        for (int y = 0; y < largeur; ++y) {
+            if (grille[x][y] && grille[x][y]->estVivante()) {
+                compteur++;
+            }
+        }
+    }
+    return compteur;
+}
+
+// Nouvelle fonction pour placer des motifs prédéfinis sur la grille
+void Grille::placerPattern(const std::string& nomPattern, int x, int y) {
+    // Exemple de motifs prédéfinis
+    std::vector<std::vector<int>> pattern;
+
+    if (nomPattern == "Glider") {
+        pattern = {
+            {0, 1, 0},
+            {0, 0, 1},
+            {1, 1, 1}
+        };
+    } else if (nomPattern == "Blinker") {
+        pattern = {
+            {1, 1, 1}
+        };
+    } else if (nomPattern == "Toad") {
+        pattern = {
+            {0, 1, 1, 1},
+            {1, 1, 1, 0}
+        };
+    } else {
+        std::cerr << "Motif inconnu : " << nomPattern << std::endl;
+        return;
+    }
+
+    // Placer le motif sur la grille
+    for (int i = 0; i < pattern.size(); ++i) {
+        for (int j = 0; j < pattern[i].size(); ++j) {
+            if (pattern[i][j] == 1) {
+                ajoutEntite(x + i, y + j, new Cellules(true));
+            }
+        }
+    }
+}
+
+// Nouvelle fonction pour vider la grille
+void Grille::vider() {
+    for (int x = 0; x < hauteur; ++x) {
+        for (int y = 0; y < largeur; ++y) {
+            supprimerEntite(x, y);
+        }
+    }
+}
