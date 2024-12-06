@@ -11,7 +11,7 @@ bool Cellules::DeterminerEtatSuivant(int voisinsVivants) {
     } else {
         if (voisinsVivants == 3) {
             changerEtat(true);
-            return true;
         }
     }
+    return true;
 }

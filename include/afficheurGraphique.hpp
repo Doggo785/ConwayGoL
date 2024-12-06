@@ -27,6 +27,10 @@ public:
     sf::Text boutonToad;
     sf::Text boutonLWSS;
     sf::Text boutonPulsar;
+    sf::Text boutonCellAlive;
+    sf::Text boutonCellDead;
+    sf::Text boutonObstacleAlive;
+    sf::Text boutonObstacleDead;
     sf::Text boutonStart;
     sf::Text boutonQuit;
     sf::Text boutonVitessePlus;

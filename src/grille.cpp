@@ -252,6 +252,22 @@ void Grille::placerPattern(const std::string& nomPattern, int x, int y) {
     {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
     {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}
         };
+    } else if (nomPattern == "Cell alive") {
+        pattern = {
+    {1}
+        };
+    }else if (nomPattern == "Cell dead") {
+        pattern = {
+    {0}
+        };
+    }else if (nomPattern == "Obstacle alive") {
+        pattern = {
+    {3}
+        };
+    }else if (nomPattern == "Obsacle dead") {
+        pattern = {
+    {2}
+        };
     } else {
         std::cerr << "Motif inconnu : " << nomPattern << std::endl;
         return;
