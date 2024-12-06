@@ -6,6 +6,7 @@
 #include "include/grille.hpp"
 #include <iostream>
 
+
 // Fonction pour démarrer le mode console avec un fichier
 void StartModeConsole(std::string nomFichier)
 {
@@ -136,6 +137,17 @@ int main()
         std::cin >> hauteur;
 
         Grille grille(largeur, hauteur);
+        std::srand(std::time(0));
+        for (int x = 0; x < grille.getHauteur(); ++x) {
+            for (int y = 0; y < grille.getLargeur(); ++y) {
+                int randomValue = std::rand() % 2; // Générer un nombre aléatoire entre 0 et 1
+                if (randomValue == 0) {
+                    grille.ajoutEntite(x, y, new Cellules(true)); // Cellule vivante
+                } else {
+                    grille.supprimerEntite(x, y); // Cellule morte (case vide)
+                }
+            }
+        }
 
         if (choixmode == 1)
         {
