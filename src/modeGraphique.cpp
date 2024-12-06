@@ -1,5 +1,5 @@
 #include "../include/modeGraphique.hpp"
-#include "afficheurGraphique.hpp"
+#include "../include/afficheurGraphique.hpp"
 #include "../include/cellules.hpp"
 #include "../include/obstacle.hpp"
 #include <iostream>
