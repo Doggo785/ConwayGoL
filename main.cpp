@@ -143,9 +143,6 @@ int main()
             int iterationMax;
             std::cout << "Entrez le nombre d'itérations : ";
             std::cin >> iterationMax;
-
-            ModeConsole mode(&grille, iterationMax, "");
-            mode.simuler();
         }
         else if (choixmode == 2)
         {

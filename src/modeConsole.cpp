@@ -5,13 +5,8 @@
 ModeConsole::ModeConsole(Grille* grille, int iterationMax, const std::string& nomFichier)
     : ModeSimulation(grille, iterationMax), nomFichier(nomFichier) {}
 
-
 void ModeConsole::saveFichier(int iteration) const {
-    std::ofstream fichier(nomFichier + "_out", std::ios::app); // Ouverture en mode ajout
-    if (!fichier) {
-        std::cerr << "Erreur : impossible d'ouvrir le fichier " << nomFichier + "_out" << std::endl;
-        return;
-    }
+    std::ofstream fichier(nomFichier + "_out", std::ios::app); // Ouverture en mode ajout    
 
     fichier << "=== Iteration " << iteration << " ===" << std::endl;
 
