@@ -1,5 +1,5 @@
-#include "modeGraphique.hpp"
-#include "afficheurGraphique.hpp"
+#include "../include/modeGraphique.hpp"
+#include "../include/afficheurGraphique.hpp"
 #include <iostream>
 #include <SFML/Window/Event.hpp>
 
