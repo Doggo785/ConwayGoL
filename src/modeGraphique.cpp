@@ -1,5 +1,8 @@
 #include "../include/modeGraphique.hpp"
 #include "../include/afficheurGraphique.hpp"
+#include "../include/cellules.hpp"
+#include "../include/obstacle.hpp"
+#include <iostream>
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
@@ -90,6 +93,14 @@ void ModeGraphique::gererEvenementsEditeur(bool& quitter) {
                 afficheur.motifSelectionne = "LWSS"; // Sélectionner le motif "LWSS"
             } else if (afficheur.boutonPulsar.getGlobalBounds().contains(souris)) {
                 afficheur.motifSelectionne = "Pulsar"; // Sélectionner le motif "Pulsar"
+            } else if (afficheur.boutonCellAlive.getGlobalBounds().contains(souris)) {
+                afficheur.motifSelectionne = "Cellule vivante"; // Sélectionner le motif "Cellule vivante"
+            } else if (afficheur.boutonCellDead.getGlobalBounds().contains(souris)) {
+                afficheur.motifSelectionne = "Cellule morte"; // Sélectionner le motif "Cellule morte"
+            } else if (afficheur.boutonObstacleAlive.getGlobalBounds().contains(souris)) {
+                afficheur.motifSelectionne = "Obstacle vivant"; // Sélectionner le motif "Obstacle vivant"
+            } else if (afficheur.boutonObstacleDead.getGlobalBounds().contains(souris)) {
+                afficheur.motifSelectionne = "Obstacle mort"; // Sélectionner le motif "Obstacle mort"
             } else if (afficheur.boutonQuitterSimulation.getGlobalBounds().contains(souris)) {
                 quitter = true; // Quitter la simulation
                 quitterSimulation = true;
@@ -108,15 +119,17 @@ void ModeGraphique::gererEvenementsEditeur(bool& quitter) {
             } else if (event.key.code == sf::Keyboard::Right) {
                 afficheur.positionActuelle.y = std::min(grille->getLargeur() - 1, afficheur.positionActuelle.y + 1);
             } else if (event.key.code == sf::Keyboard::Enter) {
-                grille->placerPattern(afficheur.motifSelectionne, afficheur.positionActuelle.x, afficheur.positionActuelle.y);
-            } else if (event.key.code == sf::Keyboard::P) {
-                afficheur.motifSelectionne = "Glider"; // Exemple : sélectionner le motif "Glider"
-            } else if (event.key.code == sf::Keyboard::B) {
-                afficheur.motifSelectionne = "Blinker"; // Exemple : sélectionner le motif "Blinker"
-            } else if (event.key.code == sf::Keyboard::T) {
-                afficheur.motifSelectionne = "Toad"; // Exemple : sélectionner le motif "Toad"
-            } else if (event.key.code == sf::Keyboard::C) {
-                grille->vider(); // Nettoyer la grille
+                if (afficheur.motifSelectionne == "Cellule vivante") {
+                    grille->ajoutEntite(afficheur.positionActuelle.x, afficheur.positionActuelle.y, new Cellules(true));
+                } else if (afficheur.motifSelectionne == "Cellule morte") {
+                    grille->supprimerEntite(afficheur.positionActuelle.x, afficheur.positionActuelle.y); 
+                } else if (afficheur.motifSelectionne == "Obstacle vivant") {
+                    grille->ajoutEntite(afficheur.positionActuelle.x, afficheur.positionActuelle.y, new Obstacle(true));
+                } else if (afficheur.motifSelectionne == "Obstacle mort") {
+                    grille->ajoutEntite(afficheur.positionActuelle.x, afficheur.positionActuelle.y, new Obstacle(false));
+                } else {
+                    grille->placerPattern(afficheur.motifSelectionne, afficheur.positionActuelle.x, afficheur.positionActuelle.y);
+                }
             }
         }
     }

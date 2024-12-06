@@ -45,15 +45,19 @@ void AfficheurGraphique::chargerRessources() {
     boutonVitessePlus = creerBouton("+ Vitesse", 1035, 20, sf::Color::White, 20);
     boutonVitesseMoins = creerBouton("- Vitesse", 1035, 60, sf::Color::White, 20);
     boutonQuitterSimulation = creerBouton("Quitter", 1135, 660, sf::Color::White, 20);
-    boutonVider = creerBouton("Vider", 1035, 180, sf::Color::White, 20);
+    boutonVider = creerBouton("Vider", 1145, 630, sf::Color::White, 20);
 
     // Créer les boutons de sélection de motif
-    texteMotifSelectionne = creerBouton("Motif: Glider", 1035, 340, sf::Color::White, 20);
-    boutonGlider = creerBouton("Glider", 1035, 220, sf::Color::White, 20);
-    boutonBlinker = creerBouton("Blinker", 1035, 260, sf::Color::White, 20);
+    texteMotifSelectionne = creerBouton("Motif: Glider", 1050, 200, sf::Color::White, 17);
+    boutonGlider = creerBouton("Glider", 1145, 380, sf::Color::White, 20);
+    boutonBlinker = creerBouton("Blinker", 1145, 300, sf::Color::White, 20);
     boutonToad = creerBouton("Toad", 1035, 300, sf::Color::White, 20);
     boutonLWSS = creerBouton("LWSS", 1035, 380, sf::Color::White, 20);
-    boutonPulsar = creerBouton("Pulsar", 1035, 420, sf::Color::White, 20);
+    boutonPulsar = creerBouton("Pulsar", 1035, 330, sf::Color::White, 20);
+    boutonCellAlive = creerBouton("Cellule vivante", 1035, 460, sf::Color::White, 20);
+    boutonCellDead = creerBouton("Cellule morte", 1035, 500, sf::Color::White, 20);
+    boutonObstacleAlive = creerBouton("Obstacle vivant", 1035, 540, sf::Color::White, 20);
+    boutonObstacleDead = creerBouton("Obstacle mort", 1035, 580, sf::Color::White, 20);
 }
 
 sf::Text AfficheurGraphique::creerBouton(const std::string& texte, float x, float y, sf::Color couleur, int taille) {
@@ -90,7 +94,7 @@ void AfficheurGraphique::afficherEditeur(const Grille& grille) {
                 if (dynamic_cast<Cellules*>(entite)) {
                     cellShape.setFillColor(entite->estVivante() ? sf::Color::Green : sf::Color::Red);
                 } else if (dynamic_cast<Obstacle*>(entite)) {
-                    cellShape.setFillColor(entite->estVivante() ? sf::Color::Blue : sf::Color::Yellow);
+                    cellShape.setFillColor(entite->estVivante() ? sf::Color::Blue : sf::Color::Red);
                 }
             } else {
                 cellShape.setFillColor(sf::Color::Black);
@@ -130,6 +134,10 @@ void AfficheurGraphique::afficherEditeur(const Grille& grille) {
     window->draw(boutonToad);
     window->draw(boutonLWSS);
     window->draw(boutonPulsar);
+    window->draw(boutonCellAlive);
+    window->draw(boutonCellDead);
+    window->draw(boutonObstacleAlive);
+    window->draw(boutonObstacleDead);
 
     // Afficher le bouton "Play/Pause"
     window->draw(playPauseButton);
@@ -154,7 +162,7 @@ void AfficheurGraphique::afficherSimulation(const Grille& grille, int iterations
                 if (dynamic_cast<Cellules*>(entite)) {
                     cellShape.setFillColor(entite->estVivante() ? sf::Color::White : sf::Color::Red);
                 } else if (dynamic_cast<Obstacle*>(entite)) {
-                    cellShape.setFillColor(entite->estVivante() ? sf::Color::Red : sf::Color::Blue);
+                    cellShape.setFillColor(entite->estVivante() ? sf::Color::Blue : sf::Color::Red);
                 }
             } else {
                 cellShape.setFillColor(sf::Color::Black);
