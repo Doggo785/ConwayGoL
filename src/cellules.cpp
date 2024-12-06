@@ -1,4 +1,4 @@
-#include "../include/cellules.h"
+#include "../include/cellules.hpp"
 
 Cellules::Cellules(bool etatInitial) : Entite(etatInitial) {}
 
@@ -11,7 +11,7 @@ bool Cellules::DeterminerEtatSuivant(int voisinsVivants) {
     } else {
         if (voisinsVivants == 3) {
             changerEtat(true);
-            return true;
         }
     }
+    return true;
 }

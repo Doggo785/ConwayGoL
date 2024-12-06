@@ -1,7 +1,7 @@
 #ifndef AFFICHEUR_H
 #define AFFICHEUR_H
 
-#include "grille.h"
+#include "grille.hpp"
 
 class Afficheur {
 public:
