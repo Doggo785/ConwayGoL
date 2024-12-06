@@ -1,7 +1,8 @@
 #include "../include/modeGraphique.hpp"
 #include "../include/afficheurGraphique.hpp"
-#include <iostream>
 #include <SFML/Window/Event.hpp>
+#include <iostream>
+
 
 ModeGraphique::ModeGraphique(Grille* grille)
     : ModeSimulation(grille, iterationMax),
