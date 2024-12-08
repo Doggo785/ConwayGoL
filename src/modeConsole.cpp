@@ -3,7 +3,7 @@
 #include <fstream>
 
 ModeConsole::ModeConsole(Grille* grille, int iterationMax, const std::string& nomFichier)
-    : ModeSimulation(grille, iterationMax), nomFichier(nomFichier) {}
+    : ModeSimulation(grille, iterationMax), nomFichier(nomFichier.empty() ? "randomGrid" : nomFichier) {}
 
 void ModeConsole::saveFichier(int iteration) const {
     std::ofstream fichier(nomFichier + "_out", std::ios::app); // Ouverture en mode ajout    
