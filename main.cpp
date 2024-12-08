@@ -91,8 +91,9 @@ int main()
     std::cout << "Choix de la grille :" << std::endl;
     std::cout << "1. Fichier pré-rempli" << std::endl;
     std::cout << "2. Grille random" << std::endl;
-    std::cout << "3. Grille vide -> Possible qu'en mode Graphique" << std::endl;
-
+    if (choixmode == 2) {
+        std::cout << "3. Grille vide -> Possible qu'en mode Graphique" << std::endl;
+    }
     std::cin >> choixgrille;
 
     if (choixgrille == 1)
@@ -170,9 +171,7 @@ int main()
         }
     }
     else if (choixgrille == 3)
-    {
-        std::cout << "-> Grille vide choisie." << std::endl;
-
+    {        
         if (choixmode == 1)
         {
             std::cerr << "ERROR : Impossible de choisir une grille vide en mode Console." << std::endl;
@@ -191,18 +190,12 @@ int main()
 
             ModeGraphique mode(&grille);
             mode.simuler();
-        }
-        else
+        } else
         {
-            std::cerr << "ERROR : Erreur de grille" << std::endl;
+            std::cerr << "-> Choix invalide." << std::endl;
             return 1;
         }
-    }
-    else
-    {
-        std::cerr << "-> Choix invalide." << std::endl;
-        return 1;
-    }
 
     return 0;
+    }
 }
