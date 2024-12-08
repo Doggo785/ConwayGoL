@@ -8,7 +8,7 @@
 
 
 ModeGraphique::ModeGraphique(Grille* grille)
-    : ModeSimulation(grille, iterationMax),
+    : ModeSimulation(grille, 100),
       window(sf::VideoMode(1280, 720), "Jeu de la Vie", sf::Style::Titlebar | sf::Style::Close),
       afficheur(&window),
       etatCourant(Menu),
@@ -149,7 +149,7 @@ void ModeGraphique::gererEvenementsSimulation(bool& quitter) {
 
             // Vérifier les clics sur les boutons de contrôle de vitesse
             if (afficheur.boutonVitessePlus.getGlobalBounds().contains(souris)) {
-                vitesse = std::min(vitesse + 1, 100); // Limite supérieure de la vitesse
+                vitesse = std::min(vitesse + 1, 20); // Limite supérieure de la vitesse
             } else if (afficheur.boutonVitesseMoins.getGlobalBounds().contains(souris)) {
                 vitesse = std::max(vitesse - 1, 1); // Limite inférieure de la vitesse
             } else if (afficheur.playPauseButton.getGlobalBounds().contains(souris)) {

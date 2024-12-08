@@ -6,6 +6,30 @@
 #include "include/grille.hpp"
 #include <iostream>
 
+void choisirModeJeu(int& choixmode);
+void choisirGrille(int choixmode);
+void demarrerModeConsole(const std::string& grille);
+void demarrerModeGraphique(const std::string& grille);
+void demarrerGrilleRandom(int choixmode);
+void demarrerGrilleVide(int choixmode);
+
+std::pair<int, int> tailleGrille(int largeur, int hauteur)
+{
+    while (largeur < 2 || hauteur < 2) {
+        if (largeur < 2) {
+            std::cout << "Entrez la largeur de la grille : ";
+            std::cin >> largeur;
+        }
+        if (hauteur < 2) {
+            std::cout << "Entrez la hauteur de la grille : ";
+            std::cin >> hauteur;
+        }
+        if (largeur < 2 || hauteur < 2) {
+            std::cerr << "ERROR : La hauteur et la largeur doivent être supérieur à 2." << std::endl;
+        }
+    }
+    return {largeur, hauteur};
+}
 
 // Fonction pour démarrer le mode console avec un fichier
 void StartModeConsole(std::string nomFichier)
@@ -52,11 +76,11 @@ void StartModeGraphique(std::string nomFichier)
     mode.simuler();
 }
 
-int main()
+int ChoixMode()
 {
-    // Demarrage du jeu
-    std::cout << "=== ConwayGoL ===" << std::endl;
-    std::cout << "par : Stephane PLathey | Marine Marine" << std::endl;
+        // Demarrage du jeu
+    std::cout << "=== Conway's Game Of Life ===" << std::endl;
+    std::cout << "par : Stephane Plathey | Marine Marine" << std::endl;
 
     // Saut de ligne
     std::cout << std::endl;
@@ -80,12 +104,13 @@ int main()
     else
     {
         std::cerr << "-> Choix invalide." << std::endl;
-        return 1;
+        return ChoixMode();
     }
+    return choixmode;
+}
 
-    // Saut de ligne
-    std::cout << std::endl;
-
+int ChoixGrille(int choixmode)
+{
     // Demande à l'utilisateur de choisir la grille
     int choixgrille;
     std::cout << "Choix de la grille :" << std::endl;
@@ -130,12 +155,8 @@ int main()
     {
         std::cout << "-> Grille random choisie." << std::endl;
 
-        // Demande à l'utilisateur de saisir la taille de la grille
-        int largeur, hauteur;
-        std::cout << "Entrez la largeur de la grille : ";
-        std::cin >> largeur;
-        std::cout << "Entrez la hauteur de la grille : ";
-        std::cin >> hauteur;
+        int largeur = 0, hauteur = 0;
+        std::tie(largeur, hauteur) = tailleGrille(largeur, hauteur);
 
         Grille grille(largeur, hauteur);
         std::srand(std::time(0));
@@ -179,12 +200,8 @@ int main()
         }
         else if (choixmode == 2)
         {
-            // Demande à l'utilisateur de saisir la taille de la grille
-            int largeur, hauteur;
-            std::cout << "Entrez la largeur de la grille : ";
-            std::cin >> largeur;
-            std::cout << "Entrez la hauteur de la grille : ";
-            std::cin >> hauteur;
+            int largeur = 0, hauteur = 0;
+            std::tie(largeur, hauteur) = tailleGrille(largeur, hauteur);
 
             Grille grille(largeur, hauteur);
 
@@ -193,9 +210,55 @@ int main()
         } else
         {
             std::cerr << "-> Choix invalide." << std::endl;
-            return 1;
+            return ChoixGrille(choixmode);
         }
-
-    return 0;
     }
+    return choixgrille;
+}
+
+
+
+void demarrerGrilleRandom(int choixmode) {
+    int largeur = 0, hauteur = 0;
+    std::tie(largeur, hauteur) = tailleGrille(largeur, hauteur);
+    Grille grille(largeur, hauteur);
+    std::srand(std::time(0));
+    for (int x = 0; x < grille.getHauteur(); ++x) {
+        for (int y = 0; y < grille.getLargeur(); ++y) {
+            int randomValue = std::rand() % 2;
+            if (randomValue == 0) {
+                grille.ajoutEntite(x, y, new Cellules(true));
+            } else {
+                grille.supprimerEntite(x, y);
+            }
+        }
+    }
+
+    if (choixmode == 1) {
+        int iterationMax;
+        std::cout << "Entrez le nombre d'itérations : ";
+        std::cin >> iterationMax;
+        ModeConsole mode(&grille, iterationMax, "");
+        mode.simuler();
+    } else if (choixmode == 2) {
+        ModeGraphique mode(&grille);
+        mode.simuler();
+    }
+}
+
+void demarrerGrilleVide(int choixmode) {
+    int largeur = 0, hauteur = 0;
+    std::tie(largeur, hauteur) = tailleGrille(largeur, hauteur);
+    Grille grille(largeur, hauteur);
+    ModeGraphique mode(&grille);
+    mode.simuler();
+}
+
+int main()
+{
+    int choixmode = ChoixMode();
+    // Saut de ligne
+    std::cout << std::endl;
+    ChoixGrille(choixmode);
+
 }
