@@ -46,6 +46,49 @@ Vous serez invité à choisir le mode de jeu et la grille de départ.
 - **Éditeur de Grille** : Créez et modifiez des grilles en mode graphique.
 - **Sauvegarde de Simulation** : Sauvegardez l'état de la grille à chaque itération.
 
+## Arborescence 🌳
+```
+.
+├── assets
+│   ├── Archive.ttf
+│   ├── background.png
+│   ├── pause.png
+│   └── play.png
+├── Diagrams
+│   ├── Diagramme d'activités.png
+│   ├── Diagramme de cas d'utilisation.png
+│   ├── Diagramme de classes.png
+│   └── Diagramme de séquence.png
+├── Grilles
+│   ├── 70x90
+│   ├── pulsar
+│   └── pulsar_out
+├── include
+│   ├── afficheurConsole.hpp
+│   ├── afficheurGraphique.hpp
+│   ├── afficheur.hpp
+│   ├── cellules.hpp
+│   ├── entite.hpp
+│   ├── grille.hpp
+│   ├── modeConsole.hpp
+│   ├── modeGraphique.hpp
+│   ├── modeSimulation.hpp
+│   └── obstacle.hpp
+├── LICENSE
+├── main
+├── main.cpp
+├── Makefile
+├── README.md
+└── src
+    ├── afficheurConsole.cpp
+    ├── afficheurGraphique.cpp
+    ├── cellules.cpp
+    ├── grille.cpp
+    ├── modeConsole.cpp
+    ├── modeGraphique.cpp
+    └── modeSimulation.cpp
+```
+
 ## Contribuer 🤝
 
 Les contributions sont les bienvenues ! Pour contribuer :
