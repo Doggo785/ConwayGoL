@@ -54,6 +54,7 @@ void AfficheurGraphique::chargerRessources() {
     boutonToad = creerBouton("Toad", 1035, 300, sf::Color::White, 20);
     boutonLWSS = creerBouton("LWSS", 1035, 380, sf::Color::White, 20);
     boutonPulsar = creerBouton("Pulsar", 1035, 330, sf::Color::White, 20);
+    boutonCanon = creerBouton("Canon", 1035, 240, sf::Color::White, 20);
     boutonCellAlive = creerBouton("Cellule vivante", 1035, 460, sf::Color::White, 20);
     boutonCellDead = creerBouton("Cellule morte", 1035, 500, sf::Color::White, 20);
     boutonObstacleAlive = creerBouton("Obstacle vivant", 1035, 540, sf::Color::White, 20);
@@ -134,6 +135,7 @@ void AfficheurGraphique::afficherEditeur(const Grille& grille) {
     window->draw(boutonToad);
     window->draw(boutonLWSS);
     window->draw(boutonPulsar);
+    window->draw(boutonCanon);
     window->draw(boutonCellAlive);
     window->draw(boutonCellDead);
     window->draw(boutonObstacleAlive);

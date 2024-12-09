@@ -27,6 +27,7 @@ public:
     sf::Text boutonToad;
     sf::Text boutonLWSS;
     sf::Text boutonPulsar;
+    sf::Text boutonCanon;
     sf::Text boutonCellAlive;
     sf::Text boutonCellDead;
     sf::Text boutonObstacleAlive;

@@ -80,7 +80,7 @@ int ChoixMode()
 {
         // Demarrage du jeu
     std::cout << "=== Conway's Game Of Life ===" << std::endl;
-    std::cout << "par : Stephane Plathey | Marine Marine" << std::endl;
+    std::cout << "par : Stephane Plathey | Marine Mazou" << std::endl;
 
     // Saut de ligne
     std::cout << std::endl;

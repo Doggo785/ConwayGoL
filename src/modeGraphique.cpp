@@ -93,6 +93,8 @@ void ModeGraphique::gererEvenementsEditeur(bool& quitter) {
                 afficheur.motifSelectionne = "LWSS"; // Sélectionner le motif "LWSS"
             } else if (afficheur.boutonPulsar.getGlobalBounds().contains(souris)) {
                 afficheur.motifSelectionne = "Pulsar"; // Sélectionner le motif "Pulsar"
+            } else if (afficheur.boutonCanon.getGlobalBounds().contains(souris)) {
+                afficheur.motifSelectionne = "Canon"; // Sélectionner le motif "Canon"
             } else if (afficheur.boutonCellAlive.getGlobalBounds().contains(souris)) {
                 afficheur.motifSelectionne = "Cellule vivante"; // Sélectionner le motif "Cellule vivante"
             } else if (afficheur.boutonCellDead.getGlobalBounds().contains(souris)) {
